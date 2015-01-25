@@ -3,9 +3,6 @@ package failExpressively;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,33 +28,5 @@ public class InvoiceTest {
 
         // if you do this, you're asking the code to lie
         assertThat("the total should be $32", underTest.totalCost(), is(expectedTotal));
-    }
-
-    /**
-     * Yes, these need to be final. Why?
-     */
-    private Matcher<Invoice> hasDiscountedCost(final Money lineItemsTotal, final Money discount) {
-
-        final Money expectedTotal = lineItemsTotal.reducedBy(twentyDollars);
-        /**
-         * We could definitely benefit by creating some code for cleaner matchers
-         */
-        return new TypeSafeMatcher<Invoice>() {
-
-            private Money actualCost;
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText(String.format(
-                    "total invoice cost of %s (a reduction of %s), but was %s (a reduction of %s)", expectedTotal,
-                    discount, actualCost, lineItemsTotal.reducedBy(actualCost)));
-            }
-
-            @Override
-            protected boolean matchesSafely(Invoice item) {
-                this.actualCost = item.totalCost();
-                return false;
-            }
-        };
     }
 }
