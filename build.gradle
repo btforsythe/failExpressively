@@ -1,0 +1,23 @@
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+
+    repositories {
+        mavenCentral()
+    }
+    
+    dependencies {
+ 		testCompile 'org.hamcrest:hamcrest-all:1.3',
+			'org.mockito:mockito-core:1.9.5',
+			'junit:junit:4.11'
+	}
+
+	configurations {
+		all*.exclude module: 'hamcrest-core' 
+		all*.exclude module: 'mockito-all'
+	}
+}
+
+allprojects.findAll { it.name =~ /\d\d_.*/ }*.dependencies {
+   	compile project(':_common')
+}
